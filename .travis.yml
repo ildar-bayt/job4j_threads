@@ -1,0 +1,20 @@
+language: java
+
+jdk:
+  - openjdk14
+
+sudo: false
+
+env:
+  global:
+    - CODECOV_TOKEN="468e18e0-7a29-4345-bf7f-e051aa0a5a90"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  email:
+    recipients:
+      -rail.zicmdi@gmail.com
+    on_success: never # default: change
+    on_failure: always # default: always
