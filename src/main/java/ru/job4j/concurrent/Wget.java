@@ -1,22 +1,39 @@
 package ru.job4j.concurrent;
 
-public class Wget {
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+
+public class Wget implements Runnable {
+    private final String url;
+    private final int speed;
+
+    public Wget(String url, int speed) {
+        this.url = url;
+        this.speed = speed;
+    }
+
+    @Override
+    public void run() {
+        try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+             FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {
+            byte[] dataBuffer = new byte[speed];
+            int bytesRead;
+            while ((bytesRead = in.read(dataBuffer, 0, speed)) != -1) {
+                fileOutputStream.write(dataBuffer, 0, bytesRead);
+                Thread.sleep(1000);
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException {
-        Thread thread = new Thread(
-                () -> {
-                    try {
-                        for (int percent = 0; percent <= 100 || !Thread.currentThread().isInterrupted(); percent++) {
-                            System.out.print("\rLoading : " + percent + "%");
-                            Thread.sleep(1000);
-                        }
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-        );
-        thread.start();
-        Thread.sleep(10000);
-        thread.interrupt();
-        thread.join();
+        String url = args[0];
+        int speed = Integer.parseInt(args[1]);
+        Thread wget = new Thread(new Wget(url, speed));
+        wget.start();
+        wget.join();
     }
 }
