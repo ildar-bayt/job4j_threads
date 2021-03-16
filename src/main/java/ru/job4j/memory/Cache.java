@@ -1,4 +1,4 @@
-package ru.job4j;
+package ru.job4j.memory;
 
 public final class Cache {
     private static Cache cache;
