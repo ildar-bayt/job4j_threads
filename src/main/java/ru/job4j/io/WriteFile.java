@@ -12,7 +12,7 @@ class WriteFile {
         this.file = file;
     }
 
-    public synchronized void saveContent(String content) throws IOException {
+    public void saveContent(String content) throws IOException {
         try (OutputStream o = new FileOutputStream(file)) {
             o.write(content.getBytes());
         }

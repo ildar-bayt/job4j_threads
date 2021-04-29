@@ -10,7 +10,7 @@ public class ReadFile {
         this.file = file;
     }
 
-    public synchronized String getContent(Predicate<Character> filter) throws IOException {
+    public String getContent(Predicate<Character> filter) throws IOException {
         StringBuilder output = new StringBuilder();
         try (InputStream inputStream = new FileInputStream(file)) {
             int data;
