@@ -13,47 +13,33 @@ public class SimpleBlockingQueue<T> {
     private final Object monitor = this;
 
     @GuardedBy("monitor")
-    private Queue<T> queue = new LinkedList<>();
+    private final Queue<T> queue = new LinkedList<>();
 
     public SimpleBlockingQueue(int bound) {
         this.bound = bound;
     }
 
-    public void offer(T value) {
-        synchronized (monitor) {
-            try {
-                while (queue.size() == bound) {
-                    System.out.println(Thread.currentThread().getName() + " wait");
-                    wait();
-                }
-                queue.add(value);
-                notifyAll();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+    public synchronized void offer(T value) throws InterruptedException {
+        while (queue.size() == bound) {
+            System.out.println(Thread.currentThread().getName() + " wait");
+            wait();
         }
+        queue.add(value);
+        notifyAll();
     }
 
-    public T poll() {
-        synchronized (monitor) {
-            T result = null;
-            try {
-                while (queue.isEmpty()) {
-                    System.out.println(Thread.currentThread().getName() + " wait");
-                    wait();
-                }
-                result = queue.poll();
-                notifyAll();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            return result;
+    public synchronized T poll() throws InterruptedException {
+        T result;
+        while (queue.isEmpty()) {
+            System.out.println(Thread.currentThread().getName() + " wait");
+            wait();
         }
+        result = queue.poll();
+        notifyAll();
+        return result;
     }
 
-    public int size() {
-        synchronized (monitor) {
-            return queue.size();
-        }
+    public synchronized int size() {
+        return queue.size();
     }
 }
