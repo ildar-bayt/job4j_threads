@@ -9,7 +9,7 @@ public class Cache {
     public boolean add(Base model) {
         return memory.putIfAbsent(model.getId(), model) == null;
     }
-    
+
     public boolean update(Base model) {
         return memory.computeIfPresent(model.getId(), (id, value) -> {
             Base stored = memory.get(model.getId());
@@ -20,17 +20,17 @@ public class Cache {
             updated.setName(model.getName());
             return updated;
         }) != null;
-    } 
-    
+    }
+
     public void delete(Base model) {
         memory.remove(model.getId());
     }
 
-    public int size(){
+    public int size() {
         return memory.size();
     }
 
-    public Base get(Integer id){
+    public Base get(Integer id) {
         return memory.get(id);
     }
 }

@@ -1,6 +1,9 @@
 package ru.job4j.io;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.function.Predicate;
 
 public class ReadFile {
